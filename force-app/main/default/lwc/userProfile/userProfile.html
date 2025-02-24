@@ -1,0 +1,16 @@
+<template>
+    <template if:true={isAdmin}>
+    <!--if:true={isAdmin} : Affiche le message uniquement pour les administrateurs.-->
+        <p>Bienvenue, Administrateur Système ! Vous avez accès aux fonctionnalités avancées.</p>
+    </template>
+
+    <template if:true={isCommercial}>
+        <!--if:true={isCommercial} : Affiche un message spécifique pour les commerciaux.-->
+        <p>Bienvenue, Commercial ! Voici vos outils de vente.</p>
+    </template>
+
+    <template if:false={isAdmin} if:false={isCommercial}>
+        <!--if:false={isAdmin} if:false={isCommercial} : Message par défaut si l'utilisateur n'a aucun des profils attendus.-->
+        <p>Votre profil ne permet pas d’accéder à ces fonctionnalités.</p>
+    </template>
+</template>
