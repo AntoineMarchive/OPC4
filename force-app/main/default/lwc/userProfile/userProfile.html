@@ -9,8 +9,8 @@
         <p>Bienvenue, Commercial ! Voici vos outils de vente.</p>
     </template>
 
-    <template if:false={isAdmin} if:false={isCommercial}>
-        <!--if:false={isAdmin} if:false={isCommercial} : Message par défaut si l'utilisateur n'a aucun des profils attendus.-->
+    <template if:true={isOtherProfile}>
+        <!--if:true={isOtherProfile} : Affiche un message spécifique pour les autres profils.-->
         <p>Votre profil ne permet pas d’accéder à ces fonctionnalités.</p>
     </template>
 </template>

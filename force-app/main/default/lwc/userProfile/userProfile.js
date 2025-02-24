@@ -15,6 +15,8 @@ export default class UserProfile extends LightningElement {
             //this.isAdmin = data === 'System Administrator' : Vérifie si l'utilisateur est admin
             this.isCommercial = data === 'Commercial';
             //this.isCommercial = data === 'Commercial' : Vérifie si l'utilisateur est commercial
+            this.isOtherProfile = !this.isAdmin && !this.isCommercial; 
+            // Si ce n'est ni l'un ni l'autre
         } else if (error) {
             console.error('Erreur lors de la récupération du profil utilisateur', error);
         }
