@@ -5,6 +5,7 @@ export default class UserProfile extends LightningElement {
     @track userProfile;
     isAdmin = false;
     isCommercial = false;
+    isOtherProfile = false;
 
     @wire(getUserProfile)
     //@wire(getUserProfile) : Appelle la méthode Apex et stocke le profil utilisateur.
