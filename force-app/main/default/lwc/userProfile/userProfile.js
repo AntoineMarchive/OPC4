@@ -23,3 +23,9 @@ export default class UserProfile extends LightningElement {
         }
     }
 }
+
+// Rôle :
+
+// Récupère le profil de l’utilisateur via Apex
+// Définit des variables pour vérifier quel type de profil a l’utilisateur
+// Affiche un message conditionnel selon le profil détecté

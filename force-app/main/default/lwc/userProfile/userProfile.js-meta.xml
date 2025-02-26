@@ -9,3 +9,8 @@
         <target>lightning__AppPage</target>
     </targets>
 </LightningComponentBundle>
+
+<!-- Rôle :
+
+Rend le composant disponible dans plusieurs types de pages Salesforce
+Définit où le composant peut être ajouté (Page d’enregistrement, Page d’accueil, Application) -->

@@ -1,0 +1,31 @@
+<template>
+    <template if:true={isAdmin}>
+        <p>Bienvenue, Administrateur Système ! Vous avez accès aux fonctionnalités avancées.</p>
+    </template>
+
+    <template if:true={isCommercial}>
+        <p>Bienvenue, Commercial ! Voici vos outils de vente.</p>
+    </template>
+
+    <template if:true={products}>
+        <lightning-datatable
+            key-field="Id"
+            data={products}
+            columns="[
+                { label: 'Product Name', fieldName: 'PricebookEntry.Product2.Name', type: 'text' },
+                { label: 'Quantity', fieldName: 'Quantity', type: 'number' },
+                { label: 'Unit Price', fieldName: 'PricebookEntry.UnitPrice', type: 'currency' },
+                { label: 'Total Price', fieldName: 'TotalPrice', type: 'currency' }
+            ]">
+        </lightning-datatable>
+    </template>
+    <template if:false={products}>
+        <p>Aucun produit ajouté à cette opportunité.</p>
+    </template>
+</template>
+
+<!-- Rôle :
+
+Définit la structure d'affichage des données
+Utilise un <lightning-datatable> pour afficher les produits sous forme de tableau  
+Utilise des conditions if:true={isAdmin}, if:true={isCommercial}, etc. -->
