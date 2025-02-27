@@ -1,50 +1,45 @@
 import { LightningElement, wire, api } from 'lwc';
 import getOpportunityProducts from '@salesforce/apex/OpportunityProductController.getOpportunityProducts';
-import getAvailableProducts from '@salesforce/apex/OpportunityProductController.getAvailableProducts';
 import getUserProfile from '@salesforce/apex/UserProfileController.getUserProfile';
 
 export default class OpportunityProductTable extends LightningElement {
-    @api recordId;
+    @api recordId; //rend la propriété public
     products;
-    availableProducts;
     userProfile;
     isAdmin = false;
-    isCommercial = false;
 
-    @wire(getOpportunityProducts, { opportunityId: '$recordId' })
+    connectedCallback(event) {
+        console.log('ID ' + this.recordId) // salessforce appel cette methode et premet de verrifier si le recordId est bien recupéré.
+    }
+
+    @wire(getOpportunityProducts, { opportunityId: '$recordId' }) // recordId : saleforce le rempli automatiquement , obligation d'avoir le @api sinon il ne comprend pas
+    // $ = recupere les données quand il y a des changements 
     //Récupère les produits d’une opportunité
     wiredProducts({ error, data }) {
+        console.log("in products")
         if (data) {
+            console.log("in products 2")
             this.products = data;
+            console.log(JSON.stringify(this.products));
         } else if (error) {
             this.products = undefined;
-        }
-    }
-
-    @wire(getOpportunityProducts, { opportunityId: '$recordId' })
-    wiredProducts({ error, data }) {
-        if (data) {
-            this.products = data;
-        } else if (error) {
-            this.products = undefined;
-        }
-    }
-
-    @wire(getAvailableProducts)
-    wiredAvailableProducts({ error, data }) {
-        //Récupère les produits disponibles dans Salesforce
-        if (data) {
-            this.availableProducts = data;
         }
     }
 
     @wire(getUserProfile)
     wiredUserProfile({ error, data }) {
+        console.log("in profile")
         if (data) {
+            console.log("in profile 2")
             this.userProfile = data;
             this.isAdmin = data === 'System Administrator';
-            this.isCommercial = data === 'Commercial';
+            console.log(JSON.stringify(data));
+            console.log("in profile 3")
         }
+    }
+
+    get hasproducts() {
+        return this.products && this.products.length > 0; 
     }
 }
 

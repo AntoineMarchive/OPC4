@@ -3,11 +3,7 @@
         <p>Bienvenue, Administrateur Système ! Vous avez accès aux fonctionnalités avancées.</p>
     </template>
 
-    <template if:true={isCommercial}>
-        <p>Bienvenue, Commercial ! Voici vos outils de vente.</p>
-    </template>
-
-    <template if:true={products}>
+    <template lwc:if={hasproducts}>
         <lightning-datatable
             key-field="Id"
             data={products}
@@ -19,7 +15,7 @@
             ]">
         </lightning-datatable>
     </template>
-    <template if:false={products}>
+    <template lwc:else>
         <p>Aucun produit ajouté à cette opportunité.</p>
     </template>
 </template>

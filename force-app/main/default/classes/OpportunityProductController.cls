@@ -11,16 +11,6 @@ public with sharing class OpportunityProductController {
             WHERE OpportunityId = :opportunityId
         ];
     }
-
-    @AuraEnabled(cacheable=true)
-    public static List<Product2> getAvailableProducts() {
-        // récupère tous les produits disponibles dans le Pricebook standard
-        Pricebook2 standardPb = [SELECT Id FROM Pricebook2 WHERE IsStandard=true LIMIT 1];
-        return [
-            SELECT Id, Name, ProductCode, Description, Family, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :standardPb.Id)
-            FROM Product2
-        ];
-    }
 }
 
 // Rôle :
