@@ -1,12 +1,36 @@
 import { LightningElement, wire, api } from 'lwc';
 import getOpportunityProducts from '@salesforce/apex/OpportunityProductController.getOpportunityProducts';
 import getUserProfile from '@salesforce/apex/UserProfileController.getUserProfile';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+const COLUMNS = [
+    { label: 'Nom du produit', fieldName: 'productName', type: 'text' },
+    { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
+    { label: 'Prix unitaire', fieldName: 'unitPrice', type: 'currency' },
+    { label: 'Prix total', fieldName: 'TotalPrice', type: 'currency' },
+    { label: 'Quantité restante', fieldName: 'QuantityInStock__c', type: 'number' },
+    { label: '', type: 'button-icon', initialWidth: 50, typeAttributes: { 
+        iconName: 'utility:delete', 
+        name: 'delete', 
+        alternativeText: 'Supprimer', 
+        title: 'Supprimer', 
+        variant: 'border-filled' 
+    }},
+    { label: 'Actions', type: 'button', typeAttributes: {
+        label: 'Voir produit',
+        name: 'view',
+        title: 'Voir produit',
+        variant: 'brand'
+    }}
+];
+
 
 export default class OpportunityProductTable extends LightningElement {
     @api recordId; //rend la propriété public
     products;
     userProfile;
     isAdmin = false;
+    columns = COLUMNS;
 
     connectedCallback(event) {
         console.log('ID ' + this.recordId) // salessforce appel cette methode et premet de verrifier si le recordId est bien recupéré.
@@ -19,7 +43,12 @@ export default class OpportunityProductTable extends LightningElement {
         console.log("in products")
         if (data) {
             console.log("in products 2")
-            this.products = data;
+            this.products = data.map(item => ({
+                ...item,
+                productName: item.PricebookEntry?.Product2?.Name,
+                unitPrice: item.PricebookEntry?.UnitPrice,
+                QuantityInStock: item.PricebookEntry?.Product2?.QuantityInStock__c
+            }));
             console.log(JSON.stringify(this.products));
         } else if (error) {
             this.products = undefined;
@@ -40,6 +69,28 @@ export default class OpportunityProductTable extends LightningElement {
 
     get hasproducts() {
         return this.products && this.products.length > 0; 
+    }
+
+    handleDelete(productId) {
+        // Logique pour supprimer le produit (nécessite une méthode Apex pour la suppression)
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Suppression',
+                message: 'Produit supprimé avec succès.',
+                variant: 'success'
+            })
+        );
+    }
+
+    handleView(productId) {
+        // Logique pour afficher la fiche produit
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Voir Produit',
+                message: `Ouverture du produit ${productId}`,
+                variant: 'info'
+            })
+        );
     }
 }
 
