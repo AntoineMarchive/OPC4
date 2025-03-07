@@ -6,10 +6,25 @@ public with sharing class OpportunityProductController {
             throw new AuraHandledException('Opportunity Id is required');
         }
         return [
-            SELECT Id, OpportunityId, PricebookEntry.Product2.Name, PricebookEntry.UnitPrice, Quantity, TotalPrice
+            SELECT Id, OpportunityId, PricebookEntry.Product2.Name, PricebookEntry.UnitPrice, Quantity, TotalPrice, PricebookEntry.Product2.QuantityInStock__c
             FROM OpportunityLineItem
             WHERE OpportunityId = :opportunityId
         ];
+    }
+
+    @AuraEnabled
+    public static void deleteOpportunityProduct(Id productId) {
+        try {
+            if (productId == null) {
+                throw new AuraHandledException('L’ID du produit est requis pour la suppression.');
+            }
+
+            OpportunityLineItem oli = [SELECT Id FROM OpportunityLineItem WHERE Id = :productId LIMIT 1];
+
+            delete oli;
+        } catch (Exception e) {
+            throw new AuraHandledException('Erreur lors de la suppression : ' + e.getMessage());
+        }
     }
 }
 

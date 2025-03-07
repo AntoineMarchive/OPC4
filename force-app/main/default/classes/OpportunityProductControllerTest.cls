@@ -16,8 +16,12 @@ private class OpportunityProductControllerTest {
         OpportunityLineItem testItem = new OpportunityLineItem(OpportunityId=testOpp.Id, PricebookEntryId=testPricebookEntry.Id, Quantity=1, UnitPrice=100);
         insert testItem;
 
-        List<OpportunityLineItem> products = OpportunityProductController.getOpportunityProducts(testOpp.Id);
-        System.assertNotEquals(0, products.size());
+        // Suppression du produit
+        OpportunityProductController.deleteOpportunityProduct(testItem.Id);
+
+        // Vérifier que le produit a bien été supprimé
+        List<OpportunityLineItem> remainingItems = [SELECT Id FROM OpportunityLineItem WHERE OpportunityId = :testOpp.Id];
+        System.assertEquals(0, remainingItems.size(), 'Le produit aurait dû être supprimé');
         Test.stopTest();
     }
 }
