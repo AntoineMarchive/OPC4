@@ -1,13 +1,29 @@
+
+
 <template>
     <template if:true={isAdmin}>
         <p>Bienvenue, Administrateur Système ! Vous avez accès aux fonctionnalités avancées.</p>
+        <!-- <p>{labels.adminWelcomeMessage}</p> -->
+
+         <!-- je souhaite ajouter un produit en stock-->
+        <!-- <lightning-button
+        label="Ajouter un produit"
+        title="Ajouter un produit"
+        onclick={handleAddProduct}
+        icon-name="utility:add"
+        class="slds-m-bottom_medium">
+    </lightning-button> -->
+    
     </template>
+
+    <!-- <template if:true={isCommercial}>
+        <p>{commercialWelcomeMessage}</p>
+    </template> -->
 
     <template if:true={showError}>
         <div class="slds-box slds-theme_error slds-m-bottom_medium">
-            <p class="slds-text-heading_small">⚠️ Erreur de stock</p>
-            <p>Vous avez au moins un produit dont la quantité dépasse le stock disponible.</p>
-            <p>Veuillez ajuster la quantité ou contacter l'administrateur.</p>
+            <p class="slds-text-heading_small">{labels.stockErrorAlert}</p>
+            <p>{labels.stockError}</p>
         </div>
     </template>
 
@@ -21,10 +37,8 @@
     </template>
     <template lwc:else>
         <div class="slds-box slds-theme_info slds-m-top_medium">
-            <p class="slds-text-heading_small">Opportunité produits</p>
-            <p>Vous n’avez aucune ligne de produits pour le moment.</p>
-            <p>1. Veuillez tout d’abord sélectionner un Catalogue (Pricebook).</p>
-            <p>2. Sélectionnez ensuite les produits à ajouter.</p>
+            <p class="slds-text-heading_small">{noProductTitle}</p>
+            <p>{noProductMessage}</p>
         </div>
     </template>
 </template>

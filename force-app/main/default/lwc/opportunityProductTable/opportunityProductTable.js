@@ -5,23 +5,45 @@ import getUserProfile from '@salesforce/apex/UserProfileController.getUserProfil
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'; //permet d'afficher des messages d'erreur ou de succès
 import { NavigationMixin } from 'lightning/navigation'; //permet de naviguer vers une page standard de Salesforce
 
-const COLUMNS = [
-    { label: 'Nom du produit', fieldName: 'productName', type: 'text' },
-    { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
-    { label: 'Prix unitaire', fieldName: 'unitPrice', type: 'currency' },
-    { label: 'Prix total', fieldName: 'TotalPrice', type: 'currency' },
-    { label: 'Quantité restante', fieldName: 'QuantityInStock__c', type: 'number' },
-    { label: '', type: 'button-icon', initialWidth: 50, typeAttributes: { //typeAttributes permet de définir les propriétés du bouton
+//  Import uniquement les labels créés
+import ProductNameLabel from '@salesforce/label/c.Product_Column_Name';
+import QuantityLabel from '@salesforce/label/c.Product_Column_Quantity';
+import UnitPriceLabel from '@salesforce/label/c.Product_Column_UnitPrice';
+import TotalPriceLabel from '@salesforce/label/c.Product_Column_TotalPrice';
+import StockLabel from '@salesforce/label/c.Product_Column_Stock';
+import DeleteLabel from '@salesforce/label/c.Product_Column_Delete';
+import ViewLabel from '@salesforce/label/c.Product_Column_View';
+import StockErrorMessage from '@salesforce/label/c.Stock_Error_Message';
+import NoProductsTitle from '@salesforce/label/c.No_Product_Title';
+import NoProductsMessage from '@salesforce/label/c.No_Product_Message_Full';
+import StockErrorAlert from '@salesforce/label/c.Stock_Error_Alert';
+// import AdminWelcomeMessage from '@salesforce/label/c.Admin_Welcome_Message';
+// import CommercialWelcomeMessage from '@salesforce/label/c.Commercial_Welcome_Message';
+
+  const COLUMNS = [
+    { label: ProductNameLabel, fieldName: 'productName', type: 'text' },
+    {
+        label: QuantityLabel,
+        fieldName: 'Quantity',
+        type: 'number',
+        cellAttributes: {
+            class: { fieldName: 'quantityClass' }
+        }
+    },
+    { label: UnitPriceLabel, fieldName: 'unitPrice', type: 'currency' },
+    { label: TotalPriceLabel, fieldName: 'TotalPrice', type: 'currency' },
+    { label: StockLabel, fieldName: 'QuantityInStock', type: 'number' },
+    { label: DeleteLabel, type: 'button-icon', initialWidth: 50, typeAttributes: { //typeAttributes permet de définir les propriétés du bouton
         iconName: 'utility:delete', 
         name: 'delete', 
-        alternativeText: 'Supprimer', 
-        title: 'Supprimer', 
+        alternativeText: DeleteLabel, 
+        title: DeleteLabel, 
         variant: 'border-filled' 
     }},
-    { label: 'Actions', type: 'button', typeAttributes: {
-        label: 'Voir produit',
+    { label: ViewLabel, type: 'button', typeAttributes: {
+        label: ViewLabel,
         name: 'view',
-        title: 'Voir produit',
+        title: ViewLabel,
         variant: 'brand'
     }}
 ];
@@ -33,8 +55,19 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
     products;
     userProfile;
     isAdmin = false;
+    // isCommercial = false;
     columns = COLUMNS;
     showError = false;
+
+     // Labels accessibles dans le HTML
+     labels = {
+     stockError : StockErrorMessage,
+     noProductTitle : NoProductsTitle,
+     noProductMessage : NoProductsMessage,
+     stockErrorAlert : StockErrorAlert,
+    //  adminWelcomeMessage : AdminWelcomeMessage,
+    // commercialWelcomeMessage : CommercialWelcomeMessage
+     }
 
     connectedCallback(event) {
         console.log('ID ' + this.recordId) // salessforce appel cette methode et premet de verrifier si le recordId est bien recupéré.
@@ -48,13 +81,20 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
         if (data) {
             console.log("in products 2")
             this.products = data.map(item => {
-                let quantityClass = item.Quantity > item.QuantityInStock ? 'slds-text-color_error slds-theme_shade' : '';
+                const quantity = item.Quantity;
+                const stock = item.PricebookEntry?.Product2?.QuantityInStock__c;
+                // let quantityClass = item.Quantity > item.QuantityInStock ? 'slds-text-color_error slds-theme_shade' : '';
                 return {
+                    // ...item,
+                    // productName: item.PricebookEntry?.Product2?.Name,
+                    // unitPrice: item.PricebookEntry?.UnitPrice,
+                    // QuantityInStock: item.PricebookEntry?.Product2?.QuantityInStock__c,
+                    // quantityClass
                     ...item,
                     productName: item.PricebookEntry?.Product2?.Name,
                     unitPrice: item.PricebookEntry?.UnitPrice,
-                    QuantityInStock: item.PricebookEntry?.Product2?.QuantityInStock__c,
-                    quantityClass
+                    QuantityInStock: stock,
+                    quantityClass: quantity > stock ? 'slds-text-color_error' : ''
                 };
             });
             this.showError = this.products.some(item => item.Quantity > item.QuantityInStock);
@@ -71,6 +111,7 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
             console.log("in profile 2")
             this.userProfile = data;
             this.isAdmin = data === 'System Administrator';
+            //this.isCommercial = data === 'Commercial' || data === 'Sales Representative';
             console.log(JSON.stringify(data));
             console.log("in profile 3")
         }
@@ -123,6 +164,16 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
             variant
         }));
     }
+
+    // handleAddProduct() {
+    //     // Logique pour ajouter un produit à l'opportunité = ajouter une quantité en stock
+    //     this[NavigationMixin.Navigate]({
+    //         type: 'standard__objectPage',
+    //         attributes: {
+    //             objectApiName: 'Product2',
+    //             actionName: 'new'
+    //         }
+    //     });
 
 }
 
