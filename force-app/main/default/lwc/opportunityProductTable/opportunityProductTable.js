@@ -17,8 +17,10 @@ import StockErrorMessage from '@salesforce/label/c.Stock_Error_Message';
 import NoProductsTitle from '@salesforce/label/c.No_Product_Title';
 import NoProductsMessage from '@salesforce/label/c.No_Product_Message_Full';
 import StockErrorAlert from '@salesforce/label/c.Stock_Error_Alert';
-// import AdminWelcomeMessage from '@salesforce/label/c.Admin_Welcome_Message';
-// import CommercialWelcomeMessage from '@salesforce/label/c.Commercial_Welcome_Message';
+import AdministratorSystem from '@salesforce/label/c.Administrator_System';
+// import CommercialSystem from '@salesforce/label/c.Commercial_System';
+import AdminWelcomeMessage from '@salesforce/label/c.Admin_Welcome_Message';
+import CommercialWelcomeMessage from '@salesforce/label/c.Commercial_Welcome_Message';
 
   const COLUMNS = [
     { label: ProductNameLabel, fieldName: 'productName', type: 'text' },
@@ -39,7 +41,10 @@ import StockErrorAlert from '@salesforce/label/c.Stock_Error_Alert';
         alternativeText: DeleteLabel, 
         title: DeleteLabel, 
         variant: 'border-filled' 
-    }},
+    }}
+];
+
+const COLUMNS_ADMIN = [
     { label: ViewLabel, type: 'button', typeAttributes: {
         label: ViewLabel,
         name: 'view',
@@ -49,24 +54,24 @@ import StockErrorAlert from '@salesforce/label/c.Stock_Error_Alert';
 ];
 
 
-
 export default class OpportunityProductTable extends NavigationMixin(LightningElement) {
     @api recordId; //rend la propriété public
     products;
     userProfile;
     isAdmin = false;
-    // isCommercial = false;
+    isCommercial = false;
     columns = COLUMNS;
     showError = false;
 
      // Labels accessibles dans le HTML
      labels = {
+     administratorSystem : AdministratorSystem,
      stockError : StockErrorMessage,
      noProductTitle : NoProductsTitle,
      noProductMessage : NoProductsMessage,
      stockErrorAlert : StockErrorAlert,
-    //  adminWelcomeMessage : AdminWelcomeMessage,
-    // commercialWelcomeMessage : CommercialWelcomeMessage
+     adminWelcomeMessage : AdminWelcomeMessage,
+     commercialWelcomeMessage : CommercialWelcomeMessage
      }
 
     connectedCallback(event) {
@@ -110,8 +115,13 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
         if (data) {
             console.log("in profile 2")
             this.userProfile = data;
-            this.isAdmin = data === 'System Administrator';
-            //this.isCommercial = data === 'Commercial' || data === 'Sales Representative';
+            this.isAdmin = data === this.labels.administratorSystem;
+            if (this.isAdmin) {
+                this.columns = [...COLUMNS, ...COLUMNS_ADMIN];
+            }
+            
+            this.isCommercial = data === 'Commercial';
+            console.log(this.labels.administratorSystem);
             console.log(JSON.stringify(data));
             console.log("in profile 3")
         }

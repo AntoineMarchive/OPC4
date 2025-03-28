@@ -2,23 +2,13 @@
 
 <template>
     <template if:true={isAdmin}>
-        <p>Bienvenue, Administrateur Système ! Vous avez accès aux fonctionnalités avancées.</p>
-        <!-- <p>{labels.adminWelcomeMessage}</p> -->
-
-         <!-- je souhaite ajouter un produit en stock-->
-        <!-- <lightning-button
-        label="Ajouter un produit"
-        title="Ajouter un produit"
-        onclick={handleAddProduct}
-        icon-name="utility:add"
-        class="slds-m-bottom_medium">
-    </lightning-button> -->
-    
+        <!-- <p>Bienvenue, Administrateur Système ! Vous avez accès aux fonctionnalités avancées.</p> -->
+        <p>{labels.adminWelcomeMessage}</p>
     </template>
 
-    <!-- <template if:true={isCommercial}>
-        <p>{commercialWelcomeMessage}</p>
-    </template> -->
+    <template if:true={isCommercial}>
+        <!-- <p>{labels.commercialWelcomeMessage}</p> -->
+    </template>
 
     <template if:true={showError}>
         <div class="slds-box slds-theme_error slds-m-bottom_medium">
@@ -37,8 +27,8 @@
     </template>
     <template lwc:else>
         <div class="slds-box slds-theme_info slds-m-top_medium">
-            <p class="slds-text-heading_small">{noProductTitle}</p>
-            <p>{noProductMessage}</p>
+            <p class="slds-text-heading_small">{labels.noProductTitle}</p>
+            <p>{labels.noProductMessage}</p>
         </div>
     </template>
 </template>
