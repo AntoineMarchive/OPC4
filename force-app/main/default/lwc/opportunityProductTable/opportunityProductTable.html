@@ -2,17 +2,15 @@
 
 <template>
     <template if:true={isAdmin}>
-        <!-- <p>Bienvenue, Administrateur Système ! Vous avez accès aux fonctionnalités avancées.</p> -->
         <p>{labels.adminWelcomeMessage}</p>
     </template>
 
     <template if:true={isCommercial}>
-        <!-- <p>{labels.commercialWelcomeMessage}</p> -->
     </template>
 
     <template if:true={showError}>
         <div class="slds-box slds-theme_error slds-m-bottom_medium">
-            <p class="slds-text-heading_small">{labels.stockErrorAlert}</p>
+                <p class="slds-text-heading_small">{labels.stockErrorAlert}</p>
             <p>{labels.stockError}</p>
         </div>
     </template>

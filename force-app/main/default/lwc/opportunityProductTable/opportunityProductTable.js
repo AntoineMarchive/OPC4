@@ -18,7 +18,6 @@ import NoProductsTitle from '@salesforce/label/c.No_Product_Title';
 import NoProductsMessage from '@salesforce/label/c.No_Product_Message_Full';
 import StockErrorAlert from '@salesforce/label/c.Stock_Error_Alert';
 import AdministratorSystem from '@salesforce/label/c.Administrator_System';
-// import CommercialSystem from '@salesforce/label/c.Commercial_System';
 import AdminWelcomeMessage from '@salesforce/label/c.Admin_Welcome_Message';
 import CommercialWelcomeMessage from '@salesforce/label/c.Commercial_Welcome_Message';
 
@@ -88,13 +87,7 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
             this.products = data.map(item => {
                 const quantity = item.Quantity;
                 const stock = item.PricebookEntry?.Product2?.QuantityInStock__c;
-                // let quantityClass = item.Quantity > item.QuantityInStock ? 'slds-text-color_error slds-theme_shade' : '';
                 return {
-                    // ...item,
-                    // productName: item.PricebookEntry?.Product2?.Name,
-                    // unitPrice: item.PricebookEntry?.UnitPrice,
-                    // QuantityInStock: item.PricebookEntry?.Product2?.QuantityInStock__c,
-                    // quantityClass
                     ...item,
                     productName: item.PricebookEntry?.Product2?.Name,
                     unitPrice: item.PricebookEntry?.UnitPrice,
@@ -174,16 +167,6 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
             variant
         }));
     }
-
-    // handleAddProduct() {
-    //     // Logique pour ajouter un produit à l'opportunité = ajouter une quantité en stock
-    //     this[NavigationMixin.Navigate]({
-    //         type: 'standard__objectPage',
-    //         attributes: {
-    //             objectApiName: 'Product2',
-    //             actionName: 'new'
-    //         }
-    //     });
 
 }
 

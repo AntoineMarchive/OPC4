@@ -11,16 +11,16 @@ public with sharing class OpportunityProductController {
             WHERE OpportunityId = :opportunityId
         ];
     }
-
+    
     @AuraEnabled
     public static void deleteOpportunityProduct(Id productId) {
         try {
             if (productId == null) {
                 throw new AuraHandledException('L’ID du produit est requis pour la suppression.');
             }
-
+            
             OpportunityLineItem oli = [SELECT Id FROM OpportunityLineItem WHERE Id = :productId LIMIT 1];
-
+            
             delete oli;
         } catch (Exception e) {
             throw new AuraHandledException('Erreur lors de la suppression : ' + e.getMessage());
