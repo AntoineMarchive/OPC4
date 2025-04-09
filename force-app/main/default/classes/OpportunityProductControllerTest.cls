@@ -45,6 +45,7 @@ private class OpportunityProductControllerTest {
             SELECT Id FROM OpportunityLineItem WHERE OpportunityId = :testOpp.Id
         ];
         System.assertEquals(0, remainingItems.size(), 'Le produit aurait dû être supprimé');
+        //Ici, on vérifie que la taille de la liste remainingItems est 0 : donc aucun produit ne devrait rester attaché à l'opportunité.
     }
     
     @isTest
@@ -53,8 +54,11 @@ private class OpportunityProductControllerTest {
         
         try {
             List<OpportunityLineItem> result = OpportunityProductController.getOpportunityProducts(null);
+//             On tente d'appeler la méthode getOpportunityProducts avec un null pour l'ID de l'opportunité.
+//             Cela devrait déclencher une exception (erreur), car la méthode attend probablement un ID valide.
         } catch (AuraHandledException e) {
             System.assertEquals('Opportunity Id is required', e.getMessage(), 'Le message d’erreur doit être correct');
+            // On vérifie que le message d’erreur correspond bien à ce qu’on attend : "Opportunity Id is required".
         }
     }
     
@@ -64,6 +68,8 @@ private class OpportunityProductControllerTest {
             OpportunityProductController.deleteOpportunityProduct(null);
         } catch (AuraHandledException e) {
             System.assertEquals('L’ID du produit est requis pour la suppression.', e.getMessage(), 'Le message d’erreur doit être correct');
+//             On vérifie que le message d’erreur retourné est bien celui attendu :
+//             "L’ID du produit est requis pour la suppression."
         }
     }
 }

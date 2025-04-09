@@ -54,7 +54,7 @@ const COLUMNS_ADMIN = [
 
 
 export default class OpportunityProductTable extends NavigationMixin(LightningElement) {
-    @api recordId; //rend la propriété public
+    @api recordId;
     products;
     userProfile;
     isAdmin = false;
@@ -77,13 +77,10 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
         console.log('ID ' + this.recordId) // salessforce appel cette methode et premet de verrifier si le recordId est bien recupéré.
     }
 
-    @wire(getOpportunityProducts, { opportunityId: '$recordId' }) // recordId : saleforce le rempli automatiquement , obligation d'avoir le @api sinon il ne comprend pas
-    // $ = recupere les données quand il y a des changements 
+    @wire(getOpportunityProducts, { opportunityId: '$recordId' }) 
     //Récupère les produits d’une opportunité
     wiredProducts({ error, data }) {
-        console.log("in products")
         if (data) {
-            console.log("in products 2")
             this.products = data.map(item => {
                 const quantity = item.Quantity;
                 const stock = item.PricebookEntry?.Product2?.QuantityInStock__c;
@@ -102,21 +99,17 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
         }
     }
 
-    @wire(getUserProfile) // recupe le profil de l'utilisateur et verifie si c'est un admin ou un commercial
+    @wire(getUserProfile) // recupere le profil de l'utilisateur et verifie si c'est un admin ou un commercial
     wiredUserProfile({ error, data }) {
-        console.log("in profile")
+
         if (data) {
-            console.log("in profile 2")
             this.userProfile = data;
-            this.isAdmin = data === this.labels.administratorSystem;
-            if (this.isAdmin) {
+            this.isAdmin = data === this.labels.administratorSystem; // detecte si le profil est un administrateur
+            if (this.isAdmin) { // si admin, on ajoute les collonnes d'admin specifiques
                 this.columns = [...COLUMNS, ...COLUMNS_ADMIN];
             }
             
-            this.isCommercial = data === 'Commercial';
-            console.log(this.labels.administratorSystem);
-            console.log(JSON.stringify(data));
-            console.log("in profile 3")
+            this.isCommercial = data === 'Commercial'; // detecte si l'utilisateur est un commercial
         }
     }
 
@@ -128,9 +121,9 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
         const actionName = event.detail.action.name;
         const row = event.detail.row;
 
-        if (actionName === 'delete') { //supprime un produit
+        if (actionName === 'delete') { //supprime un produit; Si l’action est "delete", on appelle la méthode handleDelete (vue précédemment) en lui passant l’ID du produit à supprimer.
             this.handleDelete(row.Id);
-        } else if (actionName === 'view') { // navigue vers la fiche produit
+        } else if (actionName === 'view') { // navigue vers la fiche produit;  Si l’action est "view", on appelle une méthode handleView pour naviguer vers la fiche produit.
             this.handleView(row.PricebookEntry?.Product2?.Id);
         }
     }
@@ -140,7 +133,7 @@ export default class OpportunityProductTable extends NavigationMixin(LightningEl
         // Logique pour supprimer le produit (nécessite une méthode Apex pour la suppression)
         deleteOpportunityProduct({ productId })
             .then(() => {
-                this.products = this.products.filter(item => item.Id !== productId);
+                this.products = this.products.filter(item => item.Id !== productId); //met à jour la liste this.products en retirant le produit supprimé (filtrage par ID).
                 this.showToast('Suppression réussie', 'Produit supprimé avec succès.', 'success');
             })
             .catch(error => {
